@@ -20,7 +20,7 @@ namespace DataAccess.Concrete.EntityFramework
 
         public List<Car> GetAll()
         {
-            return new List<Car> { new Car { Description = "asdas" }, new Car { Description = "abababab" } };
+            return new List<Car> { new Car { Description = "Tofaşşş" }, new Car { Description = "Renooo" } };
         }
 
         public List<Car> GetById(int brandId, int colorId)
