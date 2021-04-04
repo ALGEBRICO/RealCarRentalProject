@@ -1,0 +1,46 @@
+﻿using Business.Abstract;
+using DataAccess.Abstract;
+using Entities.Concrete;
+using Entities.DTOs;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Business.Concrete
+{
+    public class BrandManager : IBrandService
+    {
+        private IBrandDal _brandDal;
+
+     
+        public BrandManager(IBrandDal brandDal)
+        {
+            _brandDal = brandDal;
+        }
+
+        public void Add(Brand brand)
+        {
+            _brandDal.Add(brand);
+        }
+
+        public void Delete(Brand brand)
+        {
+            _brandDal.Delete(brand);
+        }
+
+        public List<Brand> GetAllBrands()
+        {
+            return _brandDal.GetAll();
+        }
+
+        public Brand GetBrandsById(int brandId)
+        {
+            return _brandDal.Get(brand => brand.BrandId == brandId);
+        }
+
+        public void Update(Brand brand)
+        {
+            _brandDal.Update(brand);
+        }
+    }
+}
