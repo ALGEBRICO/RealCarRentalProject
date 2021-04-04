@@ -12,26 +12,44 @@ namespace ConsoleUI
             //Araba Testi
             CarTest();
             //Marka Testi
-           // BrandTest();
+            BrandTest();
         }
 
         private static void BrandTest()
         {
             BrandManager brandManager = new BrandManager(new EfBrandDal());
-            foreach (var brand in brandManager.GetAllBrands())
+            var result = brandManager.GetAllBrands();
+            if (result.Success)
             {
-                Console.WriteLine(brand.BrandName);
+                foreach (var brand in result.Data)
+                {
+                    Console.WriteLine(brand.BrandName);
+                }
             }
+            else
+            {
+                Console.WriteLine(result.Message);
+            }
+            
         }
 
         private static void CarTest()
         {
             CarManager carManager = new CarManager(new EfCarDal());
 
-            foreach (var car in carManager.GetCarDetails())
+            var result = carManager.GetCarDetails();
+            if (result.Success)
             {
-                Console.WriteLine(car.BrandName + " / " + car.CarName + " / " + car.ColorName);
+                foreach (var car in result.Data)
+                {
+                    Console.WriteLine(car.BrandName + " / " + car.CarName + " / " + car.ColorName);
+                }
             }
+            else
+            {
+                Console.WriteLine(result.Message);
+            }
+            
         }
     }
 }
