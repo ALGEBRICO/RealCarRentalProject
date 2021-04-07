@@ -48,9 +48,7 @@ namespace WebAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            //app.UseOpenApi();
-            //app.UseSwaggerUi3();
-
+       
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
