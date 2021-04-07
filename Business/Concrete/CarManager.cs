@@ -5,11 +5,14 @@ using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
+using Business.BusinessAspects.Autofac;
 using Business.CCS;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using FluentValidation;
 
@@ -18,21 +21,28 @@ namespace Business.Concrete
     public class CarManager : ICarService
     {
         ICarDal _carDal;
-        private ILogger _logger;
-        public CarManager(ICarDal carDal,ILogger logger)
+        ILogger _logger;
+        IBrandService _brandService;
+        public CarManager(ICarDal carDal, ILogger logger,IBrandService brandService)
         {
             _carDal = carDal;
             _logger = logger;
+            _brandService = brandService;
         }
+        [SecuredOperation("admin,car.add")]
         [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
-            ValidationTool.Validate(new CarValidator(), car);
+            IResult result = BusinessRules.Run(CheckIfCarCountOfBrandCorrect(car.BrandId), CheckIfCarNameExists(car.CarName));
+            if (result != null)
+            {
+                return result;
+            }
 
             _carDal.Add(car);
             return new SuccessResult(Messages.CarAdded);
-        }
 
+        }
         public IResult Delete(Car car)
         {
             _carDal.Delete(car);
@@ -81,6 +91,25 @@ namespace Business.Concrete
         {
             _carDal.Update(car);
             return new SuccessResult(Messages.CarUpdated);
+        }
+
+        private IResult CheckIfCarCountOfBrandCorrect(int brandId)
+        {
+            var result = _carDal.GetAll(c => c.BrandId == brandId).Count;
+            if (result >= 10)
+            {
+                return new ErrorResult(Messages.CarsCountOfBrandError);
+            }
+            return new SuccessResult();
+        }
+        private IResult CheckIfCarNameExists(string carName)
+        {
+            var result = _carDal.GetAll(c => c.CarName == carName).Any();
+            if (result)
+            {
+                return new ErrorResult(Messages.CarNameAlreadyExists);
+            }
+            return new SuccessResult();
         }
     }
 }

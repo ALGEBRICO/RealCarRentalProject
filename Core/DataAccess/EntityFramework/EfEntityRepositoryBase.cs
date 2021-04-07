@@ -40,12 +40,6 @@ namespace Core.DataAccess.EntityFramework
                 return context.Set<TEntity>().SingleOrDefault(filter);
             }
         }
-
-        //public List<Car> GetAll()
-        //{
-        //    return new List<Car> { new Car { Description = "Tofaşşş" }, new Car { Description = "Renooo" } };
-        //}
-
         public List<TEntity> GetAll(Expression<Func<TEntity, bool>> filter = null)
         {
             using (TContext context = new TContext())
