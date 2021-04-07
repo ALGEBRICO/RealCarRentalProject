@@ -4,9 +4,13 @@ using Entities.Concrete;
 using Entities.DTOs;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
+using FluentValidation;
 
 namespace Business.Concrete
 {
@@ -18,17 +22,11 @@ namespace Business.Concrete
         {
             _carDal = carDal;
         }
-
+        [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
-            if (car.CarName.Length < 2)
-            {
-                return new ErrorResult(Messages.CarNameInvalıd);
-            }
-            else if (car.DailyPrice < 0)
-            {
-                return new ErrorResult(Messages.DailyPriceInvalıd);
-            }
+            ValidationTool.Validate(new CarValidator(), car);
+
             _carDal.Add(car);
             return new SuccessResult(Messages.CarAdded);
         }
