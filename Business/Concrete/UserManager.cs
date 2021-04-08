@@ -32,7 +32,7 @@ namespace Business.Concrete
 
         public IDataResult<User> GetById(int id)
         {
-            return new SuccessDataResult<User>(_userDal.Get(u => u.UserId == id));
+            return new SuccessDataResult<User>(_userDal.Get(u => u.Id== id));
         }
 
         public IDataResult<List<User>> GetAll()
@@ -46,9 +46,9 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        public IDataResult<List<OperationClaim>> GetClaims(User user)
+        public List<OperationClaim> GetClaims(User user)
         {
-            return new SuccessDataResult<List<OperationClaim>>(_userDal.GetClaims(user));
+            return new List<OperationClaim>(_userDal.GetClaims(user));
         }
 
         public User GetByMail(string email)
